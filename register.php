@@ -1,14 +1,10 @@
 <?php
+	include("includes/classes/Account.php");
+	
+	$account = new Account();
 
-if(isset($_POST['loginButton'])) {
-	//Нажата кнопка для входа
-}
-
-if(isset($_POST['registerButton'])) {
-	//Нажата кнопка для регистрации
-	echo "register button has been pressed";
-}
-
+	include("includes/handlers/register-handler.php");
+	include("includes/handlers/login-handler.php");
 ?>
 
 
