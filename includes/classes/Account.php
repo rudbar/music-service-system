@@ -20,7 +20,7 @@
 				return true;
 			}
 			else {
-				array_push($this->errorAr, Constants::$loginFailed);
+				array_push($this->errorArray, Constants::$loginFailed);
 				return false;
 			}
 
