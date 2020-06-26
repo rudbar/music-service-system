@@ -11,8 +11,41 @@ $jsonArray = json_encode($resultArray);
 ?>
 
 <script>
+
+$(document).ready(function() {
+	currentPlaylist = <?php echo $jsonArray; ?>;
+	audioElement = new Audio();
+	setTrack(currentPlaylist[0], currentPlaylist, false);
+});
+
+function setTrack(trackId, newPlaylist, play) {
+
+	$.post("includes/handlers/ajax/getSongJson.php", { songId: trackId }, function(data) {
+		
+		var track = JSON.parse(data);
+
+		console.log(track);
+		audioElement.setTrack(track.path);
+		audioElement.play();
+	});
+
+	if(play == true) {
+		audioElement.play();
+	}
 	
-console.log(<?php echo $jsonArray; ?>);
+}
+
+function playSong() {
+	$(".controlButton.play").hide();
+	$(".controlButton.pause").show();
+	audioElement.play();
+}
+
+function pauseSong() {
+	$(".controlButton.play").show();
+	$(".controlButton.pause").hide();
+	audioElement.pause();
+}
 
 </script>
 
@@ -60,11 +93,11 @@ console.log(<?php echo $jsonArray; ?>);
 						<img src="assets/images/icons/previous.png" alt="Предидущая">
 					</button>
 
-					<button class="controlButton play" title="Кнопка начать играть">
+					<button class="controlButton play" title="Кнопка начать играть" onclick="playSong()">
 						<img src="assets/images/icons/play.png" alt="Начать">
 					</button>
 
-					<button class="controlButton pause" title="Кнопка остановить музыку" style="display: none;">
+					<button class="controlButton pause" title="Кнопка остановить музыку" style="display: none;" onclick="pauseSong()">
 						<img src="assets/images/icons/pause.png" alt="Остановить">
 					</button>
 
