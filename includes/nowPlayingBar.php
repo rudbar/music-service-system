@@ -24,9 +24,24 @@ function setTrack(trackId, newPlaylist, play) {
 		
 		var track = JSON.parse(data);
 
-		console.log(track);
-		audioElement.setTrack(track.path);
-		audioElement.play();
+		$(".trackName span").text(track.title);
+
+		$.post("includes/handlers/ajax/getArtistJson.php", { artistId: track.artist }, function(data) {
+			var artist = JSON.parse(data);
+
+			$(".artistName span").text(artist.name);
+		});
+
+		$.post("includes/handlers/ajax/getAlbumJson.php", { albumId: track.album }, function(data) {
+			var album = JSON.parse(data);
+
+			$(".albumLink img").attr("src", album.artworkPath);
+		});
+
+
+
+		audioElement.setTrack(track);
+		playSong();
 	});
 
 	if(play == true) {
@@ -36,6 +51,11 @@ function setTrack(trackId, newPlaylist, play) {
 }
 
 function playSong() {
+
+	if(audioElement.audio.currentTime == 0) {
+		$.post("includes/handlers/ajax/updatePlays.php", { songId: audioElement.currentlyPlaying.id });
+	}
+
 	$(".controlButton.play").hide();
 	$(".controlButton.pause").show();
 	audioElement.play();
@@ -58,17 +78,17 @@ function pauseSong() {
 		<div id="nowPlayingLeft">
 			<div class="content">
 				<span class="albumLink">
-					<img src="assets/images/artwork/sans.jpg" class="albumArtwork">
+					<img src="" class="albumArtwork">
 				</span>
 
 				<div class="trackInfo">
 					
 					<span class="trackName">
-						<span>Название Песни</span>
+						<span></span>
 					</span>
 
 					<span class="artistName">
-						<span>Имя Исполнителя</span>
+						<span></span>
 					</span>
 
 				</div>
