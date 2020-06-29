@@ -16,6 +16,13 @@ $(document).ready(function() {
 	currentPlaylist = <?php echo $jsonArray; ?>;
 	audioElement = new Audio();
 	setTrack(currentPlaylist[0], currentPlaylist, false);
+	updateVolumeProgressBar(audioElement.audio);
+
+
+	$("#nowPlayingBarContainer").on("mousedown touchstart mousemove touchmove", function(e) {
+		e.preventDefault();
+
+	});
 
 
 	$(".playbackBar .progressBar").mousedown(function() {
@@ -30,6 +37,30 @@ $(document).ready(function() {
 
 	$(".playbackBar .progressBar").mouseup(function(e) {
 		timeFromOffset(e, this);
+	});
+
+	$(".volumeBar .progressBar").mousedown(function() {
+		mouseDown = true;
+	});
+
+	$(".volumeBar .progressBar").mousemove(function(e) {
+		if(mouseDown == true) {
+			
+			var percentage = e.offsetX / $(this).width();
+
+			if(percentage >= 0 && percentage <= 1) {
+				audioElement.audio.volume = percentage;
+			}
+		}
+	});
+
+	$(".volumeBar .progressBar").mouseup(function(e) {
+
+		var percentage = e.offsetX / $(this).width();
+
+		if(percentage >= 0 && percentage <= 1) {
+			audioElement.audio.volume = percentage;
+		}
 	});
 
 	$(document).mouseup(function() {
@@ -48,7 +79,35 @@ function timeFromOffset(mouse, progressBar) {
 	audioElement.setTime(seconds);
 }
 
+function nextSong() {
+
+	if(repeat == true) {
+		audioElement.setTime(0);
+		playSong();
+		return;
+	}
+
+	if(currentIndex == currentPlaylist.length - 1) {
+		currentIndex = 0;
+	}
+	else {
+		currentIndex++;
+	}
+
+	var trackToPlay = currentPlaylist[currentIndex];
+	setTrack(trackToPlay, currentPlaylist, true);
+}
+
+function setRepeat() {
+	repeat = !repeat;
+	var imageName = repeat ? "repeat-active.png" : "repeat.png";
+	$(".controlButton.repeat img").attr("src", "assets/images/icons/" + imageName);
+}
+
 function setTrack(trackId, newPlaylist, play) {
+
+	currentIndex = currentPlaylist.indexOf(trackId);
+	pauseSong();
 
 	$.post("includes/handlers/ajax/getSongJson.php", { songId: trackId }, function(data) {
 		
@@ -151,11 +210,11 @@ function pauseSong() {
 						<img src="assets/images/icons/pause.png" alt="Остановить">
 					</button>
 
-					<button class="controlButton next" title="Кнопка Следующая песня">
+					<button class="controlButton next" title="Кнопка Следующая песня" onclick="nextSong()">
 						<img src="assets/images/icons/next.png" alt="Следующая">
 					</button>
 
-					<button class="controlButton repeat" title="Кнопка повторять песню">
+					<button class="controlButton repeat" title="Кнопка повторять песню" onclick="setRepeat()">
 						<img src="assets/images/icons/repeat.png" alt="Повторять">
 					</button>
 					
