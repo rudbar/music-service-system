@@ -388,7 +388,8 @@ body {
 }
 
 .tracklistContainer h2,
-.gridViewContainer h2 {
+.gridViewContainer h2,
+.artistsContainer h2 {
     text-align: center;
 }
 
@@ -431,6 +432,22 @@ input:focus {
 .searchResultRow .artistName span {
     color: #fff;
 }
+
+.noResults {
+    margin: 15px;
+    display: block;
+}
+
+.buttonItems .button {
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+.playlistsContainer {
+    padding: 10px 0;
+}
+
+
 
 
 

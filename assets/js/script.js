@@ -7,8 +7,13 @@ var currentIndex = 0;
 var repeat = false;
 var shuffle = false;
 var userLoggedIn;
+var timer;
 
 function openPage(url) {
+
+	if(timer != null) {
+		clearTimeout(timer);
+	}
 
 	if(url.indexOf("?") == -1) {
 		url = url + "?";
@@ -19,6 +24,21 @@ function openPage(url) {
 	$("#mainContent").load(encodedUrl);
 	$("body").scrollTop(0);
 	history.pushState(null, null, url);
+}
+
+function createPlaylist(username) {
+	var alert = prompt("Введите имя Вашего плейлиста");
+
+	if(alert != null) {
+
+		$.post("includes/handlers/ajax/createPlaylist.php", {name: alert, username: username })
+		.done(function() {
+			openPage("yourMusic.php");
+		});
+
+	}
+
+
 }
 
 function formatTime(seconds) {
