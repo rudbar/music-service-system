@@ -26,13 +26,19 @@ function openPage(url) {
 	history.pushState(null, null, url);
 }
 
-function createPlaylist(username) {
-	var alert = prompt("Введите имя Вашего плейлиста");
+function createPlaylist() {
+	var popup = prompt("Введите имя Вашего плейлиста");
 
-	if(alert != null) {
+	if(popup != null) {
 
-		$.post("includes/handlers/ajax/createPlaylist.php", {name: alert, username: username })
-		.done(function() {
+		$.post("includes/handlers/ajax/createPlaylist.php", {name: popup, username: userLoggedIn })
+		.done(function(error) {
+
+			if(error != "") {
+				alert(error);
+				return;
+			}
+
 			openPage("yourMusic.php");
 		});
 
