@@ -9,6 +9,18 @@ var shuffle = false;
 var userLoggedIn;
 var timer;
 
+$(document).click(function(click) {
+	var target = $(click.target);
+
+	if(!target.hasClass("item") && !target.hasClass("optionsButton")) {
+		hideOptionsMenu();
+	}
+});
+
+$(window).scroll(function() {
+	hideOptionsMenu();
+});
+
 function openPage(url) {
 
 	if(timer != null) {
@@ -65,6 +77,28 @@ function deletePlaylist(playlistId, ) {
 
 
 	}
+}
+
+function hideOptionsMenu() {
+	var menu = $(".optionsMenu");
+	if(menu.css("display") != "none") {
+		menu.css("display", "none");
+	}
+}
+
+function showOptionsMenu(button) {
+
+	var menu = $(".optionsMenu");
+	var menuWidth = menu.width();
+
+	var scrollTop = $(window).scrollTop(); //Расстояние от верха текущего окна до верха всей страницы
+	var elementOffset = $(button).offset().top; // Расстояние от верха всей страницы
+
+	var top = elementOffset - scrollTop;
+	var left = $(button).position().left;
+
+	menu.css({ "top": top + "px", "left": left - menuWidth + "px", "display": "inline" });
+
 }
 
 function formatTime(seconds) {
