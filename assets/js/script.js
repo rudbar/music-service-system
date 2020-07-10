@@ -21,6 +21,24 @@ $(window).scroll(function() {
 	hideOptionsMenu();
 });
 
+$(document).on("change", "select.playlist", function() {
+	var select = $(this);
+	var playlistId = select.val();
+	var songId = select.prev(".songId").val();
+
+	$.post("includes/handlers/ajax/addToPlaylist.php", { playlistId: playlistId, songId: songId})
+	.done(function(error) {
+
+		if(error != "") {
+			alert(error);
+			return;
+		}
+
+		hideOptionsMenu();
+		select.val("");
+	});
+});
+
 function openPage(url) {
 
 	if(timer != null) {
@@ -36,6 +54,21 @@ function openPage(url) {
 	$("#mainContent").load(encodedUrl);
 	$("body").scrollTop(0);
 	history.pushState(null, null, url);
+}
+
+function removeFromPlaylist(button, playlistId) {
+	var songId = $(button).prevAll(".songId").val();
+
+	$.post("includes/handlers/ajax/removeFromPlaylist.php", { playlistId: playlistId, songId: songId })
+	.done(function(error) {
+
+		if(error != "") {
+			alert(error);
+			return;
+		}
+
+		openPage("playlist.php?id=" + playlistId);
+	});
 }
 
 function createPlaylist() {
@@ -87,9 +120,11 @@ function hideOptionsMenu() {
 }
 
 function showOptionsMenu(button) {
+	var songId = $(button).prevAll(".songId").val();
 
 	var menu = $(".optionsMenu");
 	var menuWidth = menu.width();
+	menu.find(".songId").val(songId);
 
 	var scrollTop = $(window).scrollTop(); //Расстояние от верха текущего окна до верха всей страницы
 	var elementOffset = $(button).offset().top; // Расстояние от верха всей страницы

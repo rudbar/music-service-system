@@ -51,7 +51,7 @@
 		}
 
 		public static function getPlaylistsDropdown($con, $username) {
-			$dropdown = '<select class="item playList">
+			$dropdown = '<select class="item playlist">
 							<option value="">Добавить в плейлист</option>';
 
 
